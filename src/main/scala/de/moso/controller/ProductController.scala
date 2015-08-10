@@ -16,8 +16,11 @@ import scala.beans.BeanProperty
 
 trait ApiResultEntity extends ShopEntity
 
-case class ApiProduct( @BeanProperty var name: String
+case class ApiProduct(
+                       @BeanProperty var name: String
                      , @BeanProperty var description: String
+                     , @BeanProperty var id: String
+                     , @BeanProperty var productId: String
                      , @BeanProperty var img: String
                      , @BeanProperty var inStock: Boolean
                      , @BeanProperty var price: Float
@@ -58,7 +61,15 @@ class ProductController {
   }
 
   def build[A >: ShopEntity](u: ShopEntity): ApiResultEntity = u match {
-    case p: Product => ApiProduct(p.name, p.description, build(p.image), p.inStock, build(p.price), build(commentRepository.findByProductId(p.productId)))
+    case p: Product => ApiProduct(
+                      p.name
+                    , p.description
+                    , p.id
+                    , p.productId
+                    , build(p.image)
+                    , p.inStock
+                    , build(p.price)
+                    , build(commentRepository.findByProductId(p.productId)))
   }
 
   //@PreAuthorize("hasRole('ROLE_DOMAIN_USER')")
@@ -76,7 +87,7 @@ class ProductController {
   //@PreAuthorize("hasRole('ROLE_DOMAIN_USER')")
   @RequestMapping(value = Array("/test"), produces = Array("application/json"), method = Array(RequestMethod.GET))
   def test() = {
-    val p = Product (
+    val p1 = Product (
         "Termometer"
       , "Lorem impsum djfh djshf sdsdf hdskf skdf sdf sdfkjhsd kh ksjdhf sdfjhsdf sdfjkhsdf bnxbvkrhkert eurtz b "
       , "PDI-4711-" + Calendar.getInstance().getTime.getTime
@@ -85,18 +96,49 @@ class ProductController {
       , Image("path")
 
     )
-    productRepository.save(p);
+    productRepository.save(p1)
 
-    val c = Comment (
-        p.productId
+    val c1_1 = Comment (
+        p1.productId
     , "Comment 123 kdsjhfkdh 2."
     , 5
     , "DummyUser"
     , Calendar.getInstance().getTime
     )
 
-    commentRepository.save(c)
+    commentRepository.save(c1_1)
+
+
+    val p2 = Product (
+      "Termometer"
+      , "Lorem impsum djfh djshf sdsdf hdskf skdf sdf sdfkjhsd kh ksjdhf sdfjhsdf sdfjkhsdf bnxbvkrhkert eurtz b "
+      , "PDI-4711-" + Calendar.getInstance().getTime.getTime
+      , true
+      , Price(12.77F)
+      , Image("path")
+
+    )
+    productRepository.save(p2)
+
+    val c2_1 = Comment (
+      p2.productId
+      , "khdsf ksdhf dhf."
+      , 3
+      , "MyDummyUser"
+      , Calendar.getInstance().getTime
+    )
+    val c2_2 = Comment (
+      p2.productId
+      , "Comment 123 kdsjhfkdh 2."
+      , 4
+      , "NoDummyUser"
+      , Calendar.getInstance().getTime
+    )
+
+    commentRepository.save(c2_1)
+    commentRepository.save(c2_2)
   }
+
 
 
 }
