@@ -1,9 +1,7 @@
 package de.moso.repository
 
-import org.springframework.data.mongodb.repository.MongoRepository
 import de.moso.entity._
-
-import collection.JavaConversions._
+import org.springframework.data.mongodb.repository.MongoRepository
 /**
  * Created by Sandro on 08.08.15 for shop.
  */
