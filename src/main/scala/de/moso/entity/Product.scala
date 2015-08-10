@@ -17,6 +17,7 @@ case class Image ( path: String
 
 case class Product( name: String
                   , description: String
+                  , shortdescription: String
                   , productId: String
                   , inStock: Boolean
                   , price: Price

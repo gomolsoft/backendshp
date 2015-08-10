@@ -19,6 +19,7 @@ trait ApiResultEntity extends ShopEntity
 case class ApiProduct(
                        @BeanProperty var name: String
                      , @BeanProperty var description: String
+                     , @BeanProperty var shortdescription: String
                      , @BeanProperty var id: String
                      , @BeanProperty var productId: String
                      , @BeanProperty var img: String
@@ -64,6 +65,7 @@ class ProductController {
     case p: Product => ApiProduct(
                       p.name
                     , p.description
+                    , p.shortdescription
                     , p.id
                     , p.productId
                     , build(p.image)
@@ -85,15 +87,23 @@ class ProductController {
   }
 
   //@PreAuthorize("hasRole('ROLE_DOMAIN_USER')")
+  @RequestMapping(value = Array("/{id}"), produces = Array("application/json"), method = Array(RequestMethod.POST))
+  def product(@PathVariable("id") id: String): ApiResultEntity = {
+    val product = productRepository.findOne(id)
+    build(product)
+  }
+
+  //@PreAuthorize("hasRole('ROLE_DOMAIN_USER')")
   @RequestMapping(value = Array("/test"), produces = Array("application/json"), method = Array(RequestMethod.GET))
   def test() = {
     val p1 = Product (
         "Termometer"
       , "Lorem impsum djfh djshf sdsdf hdskf skdf sdf sdfkjhsd kh ksjdhf sdfjhsdf sdfjkhsdf bnxbvkrhkert eurtz b "
+      ,"genaue Raumtemperatur-Messung"
       , "PDI-4711-" + Calendar.getInstance().getTime.getTime
       , true
       , Price(12.77F)
-      , Image("path")
+      , Image("http://placehold.it/960x720")
 
     )
     productRepository.save(p1)
@@ -109,13 +119,26 @@ class ProductController {
     commentRepository.save(c1_1)
 
 
-    val p2 = Product (
-      "Termometer"
+    val p2a = Product (
+      "Thermostat Gruppe"
       , "Lorem impsum djfh djshf sdsdf hdskf skdf sdf sdfkjhsd kh ksjdhf sdfjhsdf sdfjkhsdf bnxbvkrhkert eurtz b "
-      , "PDI-4711-" + Calendar.getInstance().getTime.getTime
+      ,"für die optimale Temperaturregelung im 3er Pack"
+      , "PDI-4712-a-" + Calendar.getInstance().getTime.getTime
       , true
-      , Price(12.77F)
-      , Image("path")
+      , Price(43.99F)
+      , Image("http://placehold.it/930x700")
+
+    )
+    productRepository.save(p2a)
+
+    val p2 = Product (
+      "Thermostat"
+      , "Lorem impsum djfh djshf sdsdf hdskf skdf sdf sdfkjhsd kh ksjdhf sdfjhsdf sdfjkhsdf bnxbvkrhkert eurtz b "
+      ,"für die optimale Temperaturregelung"
+      , "PDI-4712-" + Calendar.getInstance().getTime.getTime
+      , true
+      , Price(36.77F)
+      , Image("http://placehold.it/1200x900")
 
     )
     productRepository.save(p2)
