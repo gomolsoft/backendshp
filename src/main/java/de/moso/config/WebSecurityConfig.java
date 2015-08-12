@@ -20,6 +20,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
+import org.springframework.security.web.savedrequest.NullRequestCache;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.WebUtils;
 
@@ -44,6 +45,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
 
                 .antMatchers("/product/**").permitAll()
+                .antMatchers("/user/**").permitAll()
 
                 .antMatchers("/report").permitAll()
                 .antMatchers("/jasper/**").permitAll()
@@ -56,7 +58,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .addFilterBefore(new AuthenticationFilter(authenticationManager()), BasicAuthenticationFilter.class)
 //                .addFilterBefore(new ManagementEndpointAuthenticationFilter(authenticationManager()), BasicAuthenticationFilter.class)
+//                .addFilterAfter(new SessionFilter(), BasicAuthenticationFilter.class)
         ;
+
     }
 
     @Override

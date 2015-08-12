@@ -1,14 +1,16 @@
 package de.moso.controller
 
+import java.security.Principal
 import java.util
 import java.util.{Calendar, Collections, Date}
 
 import de.moso.config.ShoppingCartService
 import de.moso.entity._
 import de.moso.repository.{ProductCommentRepository, ProductDiscountRepository, ProductRepository}
+import de.moso.service.AuthenticatedExternalWebService
+import org.slf4j.{Logger, LoggerFactory}
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation._
-import org.springframework.web.context.request.RequestContextHolder
 
 import scala.beans.BeanProperty
 
@@ -63,6 +65,8 @@ case class ApiCart (
 @RestController
 @RequestMapping(Array("/product"))
 class ProductController {
+
+  private val logger: Logger = LoggerFactory.getLogger(classOf[ProductController])
 
   import collection.JavaConversions._
 
@@ -164,12 +168,17 @@ class ProductController {
   }
 
   //@PreAuthorize("hasRole('ROLE_DOMAIN_USER')")
-  @RequestMapping(value = Array("/cart"), produces = Array("application/json"), method = Array(RequestMethod.POST))
-  def product(@PathVariable("productId") productId: String, @PathVariable("quantity") quantity: Integer): ApiResultEntity = {
-    val sid = RequestContextHolder.currentRequestAttributes().getSessionId()
+  //  def product(@RequestParam (value = "productId", required = false) productId: String, @RequestParam(value = "quantity", required = false) quantity: Integer): ApiResultEntity = {
+
+//  @RequestMapping(value = Array("/cart/{productId}/{quantity}"), produces = Array("application/json"), method = Array(RequestMethod.POST))
+//  def product(@PathVariable (value = "productId") productId: String, @PathVariable(value = "quantity") quantity: Integer): ApiResultEntity = {
+
+  @RequestMapping(value = Array("/cart"), method = Array(RequestMethod.POST), headers = Array("content-type=application/x-www-form-urlencoded"))
+  def product(@RequestParam (value = "productId", required = false) productId: String, @RequestParam(value = "quantity", required = false) quantity: Integer, user: Principal): ApiResultEntity = {
+    user.getName
+    var eusr = user.asInstanceOf[AuthenticatedExternalWebService].getPrincipal
 
     null
-
   }
 
 

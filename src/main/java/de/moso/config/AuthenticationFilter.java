@@ -69,6 +69,7 @@ public class AuthenticationFilter extends GenericFilterBean {
                 if (logger.isDebugEnabled())
                     logger.debug("Trying to authenticate user by X-Auth-Token method. Token: {}", token);
                 processTokenAuthentication(token);
+                logger.info("Token passed {}", token);
             }
 
             if (logger.isDebugEnabled())
@@ -77,7 +78,7 @@ public class AuthenticationFilter extends GenericFilterBean {
             addSessionContextToLogging();
 
             if (logger.isInfoEnabled())
-                logger.info("User is Authenicated for path {}", resourcePath);
+                logger.info("Benutzer darf den Pfad {} durchlaufen.", resourcePath);
 
             chain.doFilter(request, response);
         } catch (InternalAuthenticationServiceException internalAuthenticationServiceException) {
