@@ -14,3 +14,8 @@ trait ProductCommentRepository extends MongoRepository[Comment, String] {
   def findByProductId(productId: String): java.util.List[Comment]
 
 }
+
+trait ProductDiscountRepository extends MongoRepository[Discount, String] {
+  def findByProductId(productId: String): java.util.List[Discount]
+
+}

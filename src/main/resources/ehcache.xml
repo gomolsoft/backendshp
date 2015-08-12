@@ -11,4 +11,10 @@
            timeToLiveSeconds="14400" memoryStoreEvictionPolicy="LRU">
         <persistence strategy="none"/>
     </cache>
+
+    <cache name="restShopApiShopCartCache" eternal="false" maxElementsInMemory="0" overflowToDisk="false"
+           timeToLiveSeconds="14400" memoryStoreEvictionPolicy="LRU">
+        <persistence strategy="none"/>
+    </cache>
+
 </ehcache>

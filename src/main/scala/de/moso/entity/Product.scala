@@ -15,10 +15,26 @@ case class Price ( price: Float
 case class Image ( path: String
                   ) extends ShopEntity
 
+case class Discount ( productId: String
+                    , discountPrice: Price
+                    , discountPercent: Int
+                    , validFrom: Date
+                    , validTo: Date
+                      ) extends ShopDBEntity {
+  @Id
+  var id: java.lang.String = _
+
+}
+
+case class ProductDescription(
+                    shortDescription: String
+                  , longDescription: String
+                  , technicalDescription: String
+                               )
+
 case class Product( name: String
-                  , description: String
-                  , shortdescription: String
                   , productId: String
+                  , productDescription: ProductDescription
                   , inStock: Boolean
                   , price: Price
                   , image: Image
@@ -37,4 +53,8 @@ case class Comment ( productId: String
   @Id
   var id: java.lang.String = _
 
+}
+
+object Discount {
+  def emtyDiscount = Discount(null,Price(Float.NaN),0,null,null)
 }
