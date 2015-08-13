@@ -60,7 +60,7 @@ case class ApiCart (
                      @BeanProperty var total: Float
                    , @BeanProperty var items: util.List[ApiCartItem]
 
-                    )
+                    ) extends ApiResultEntity
 
 @RestController
 @RequestMapping(Array("/product"))
@@ -174,7 +174,7 @@ class ProductController {
     var eusr = user.asInstanceOf[AuthenticatedExternalWebService]
 
     var apiCart = shopingCartService.retrieve(eusr.getToken) match {
-      case Some(c) => c
+      case Some(c) => ApiCart(0, c.items :+ ApiCartItem(buildApiProduct(productRepository.findByProductId(productId)), quantity)  )
       case None    => ApiCart(0, List( ApiCartItem(buildApiProduct(productRepository.findByProductId(productId)), quantity) ))
     }
 
