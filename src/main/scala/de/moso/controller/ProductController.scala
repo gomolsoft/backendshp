@@ -171,9 +171,9 @@ class ProductController {
 
   @RequestMapping(value = Array("/cart"), method = Array(RequestMethod.POST), headers = Array("content-type=application/x-www-form-urlencoded"))
   def product(@RequestParam (value = "productId", required = false) productId: String, @RequestParam(value = "quantity", required = false) quantity: Integer, user: Principal): ApiResultEntity = {
-    var eusr = user.asInstanceOf[AuthenticatedExternalWebService]
+    val eusr = user.asInstanceOf[AuthenticatedExternalWebService]
 
-    var apiCart = shopingCartService.retrieve(eusr.getToken) match {
+    val apiCart = shopingCartService.retrieve(eusr.getToken) match {
       case Some(c) => ApiCart(0, c.items :+ ApiCartItem(buildApiProduct(productRepository.findByProductId(productId)), quantity)  )
       case None    => ApiCart(0, List( ApiCartItem(buildApiProduct(productRepository.findByProductId(productId)), quantity) ))
     }
