@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.repository.MongoRepository
  */
 trait ProductRepository extends MongoRepository[Product, String] {
   def findByName(name: String): java.util.List[Product]
-
+  def findByProductId(productId: String):Product
 }
 
 trait ProductCommentRepository extends MongoRepository[Comment, String] {

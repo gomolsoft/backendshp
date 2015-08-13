@@ -58,7 +58,7 @@ case class ApiCartItem (
 
 case class ApiCart (
                      @BeanProperty var total: Float
-                   , @BeanProperty var comments: util.List[ApiCartItem]
+                   , @BeanProperty var items: util.List[ApiCartItem]
 
                     )
 
@@ -158,13 +158,9 @@ class ProductController {
     buildApiProductDetail(product)
   }
 
-  val shopingCartManager = (sid: String, productId: String, quantity:Int) => {
-    val apiCart = if (shopingCartService.contains(sid)) shopingCartService.retrieve(sid)
-
-    val shopCartItem = (apiCart, productId, quantity) match {
-      case (_, productId: String, quantity: Int) =>
-    }
-
+  def shoppingCartManager ( cart: ApiCart ):ApiCart =  {
+    val tot = cart.items.map( i => ( i.quantity * i.apiProduct.price ) ).sum
+    ApiCart(tot, cart.items)
   }
 
   //@PreAuthorize("hasRole('ROLE_DOMAIN_USER')")
@@ -175,10 +171,14 @@ class ProductController {
 
   @RequestMapping(value = Array("/cart"), method = Array(RequestMethod.POST), headers = Array("content-type=application/x-www-form-urlencoded"))
   def product(@RequestParam (value = "productId", required = false) productId: String, @RequestParam(value = "quantity", required = false) quantity: Integer, user: Principal): ApiResultEntity = {
-    user.getName
-    var eusr = user.asInstanceOf[AuthenticatedExternalWebService].getPrincipal
+    var eusr = user.asInstanceOf[AuthenticatedExternalWebService]
 
-    null
+    var apiCart = shopingCartService.retrieve(eusr.getToken) match {
+      case Some(c) => c
+      case None    => ApiCart(0, List( ApiCartItem(buildApiProduct(productRepository.findByProductId(productId)), quantity) ))
+    }
+
+    shoppingCartManager(apiCart)
   }
 
 

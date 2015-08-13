@@ -26,10 +26,13 @@ class ShoppingCartService {
   }
 
   def contains(token: String): Boolean = {
-    return restShopApiAuthTokenCache.get(token) != null
+    restShopApiAuthTokenCache.get(token) != null
   }
 
-  def retrieve(token: String): ApiCart = {
-    return restShopApiAuthTokenCache.get(token).getObjectValue.asInstanceOf[ApiCart]
+  def retrieve(token: String): Option[ApiCart] = {
+    if (contains(token))
+      Some(restShopApiAuthTokenCache.get(token).getObjectValue.asInstanceOf[ApiCart])
+
+    None
   }
 }
