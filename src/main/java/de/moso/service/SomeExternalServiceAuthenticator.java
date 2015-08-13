@@ -27,7 +27,7 @@ public class SomeExternalServiceAuthenticator implements ExternalServiceAuthenti
         final AuthenticatedExternalWebService authenticatedExternalWebService;
 
         if (WEB_USER.equals(username))
-            authenticatedExternalWebService  = new AuthenticatedExternalWebService(new DomainUser(username, UUID.randomUUID().toString()), null, AuthorityUtils.commaSeparatedStringToAuthorityList(ROLE_DOMAIN_USER));
+            authenticatedExternalWebService  = new AuthenticatedExternalWebService(new DomainUser(username, UUID.randomUUID().toString()), null, AuthorityUtils.commaSeparatedStringToAuthorityList(ROLE_WEB_USER));
         else
             authenticatedExternalWebService  = new AuthenticatedExternalWebService(new DomainUser(username, UUID.randomUUID().toString()), null, AuthorityUtils.commaSeparatedStringToAuthorityList(ROLE_DOMAIN_USER+","+ROLE_WEB_USER));
 

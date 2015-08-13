@@ -10,6 +10,7 @@ import de.moso.repository.{ProductCommentRepository, ProductDiscountRepository, 
 import de.moso.service.AuthenticatedExternalWebService
 import org.slf4j.{Logger, LoggerFactory}
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation._
 
 import scala.beans.BeanProperty
@@ -139,7 +140,8 @@ class ProductController {
     )
   }
 
-  //@PreAuthorize("hasRole('ROLE_DOMAIN_USER')")
+  //@PreAuthorize("hasRole('+"+SomeExternalServiceAuthenticator.ROLE_WEB_USER+"')")
+  @PreAuthorize("hasRole('ROLE_WEB_USER')")
   @RequestMapping(value = Array("/products"), produces = Array("application/json"), method = Array(RequestMethod.GET))
   def allDevices(): java.util.List[ApiResultEntity] = {
 
@@ -151,7 +153,7 @@ class ProductController {
 
   }
 
-  //@PreAuthorize("hasRole('ROLE_DOMAIN_USER')")
+  @PreAuthorize("hasRole('ROLE_WEB_USER')")
   @RequestMapping(value = Array("/{id}"), produces = Array("application/json"), method = Array(RequestMethod.POST))
   def product(@PathVariable("id") id: String): ApiResultEntity = {
     val product = productRepository.findOne(id)
@@ -163,12 +165,7 @@ class ProductController {
     ApiCart(tot, cart.items)
   }
 
-  //@PreAuthorize("hasRole('ROLE_DOMAIN_USER')")
-  //  def product(@RequestParam (value = "productId", required = false) productId: String, @RequestParam(value = "quantity", required = false) quantity: Integer): ApiResultEntity = {
-
-//  @RequestMapping(value = Array("/cart/{productId}/{quantity}"), produces = Array("application/json"), method = Array(RequestMethod.POST))
-//  def product(@PathVariable (value = "productId") productId: String, @PathVariable(value = "quantity") quantity: Integer): ApiResultEntity = {
-
+  @PreAuthorize("hasRole('ROLE_WEB_USER')")
   @RequestMapping(value = Array("/cart"), method = Array(RequestMethod.POST), headers = Array("content-type=application/x-www-form-urlencoded"))
   def product(@RequestParam (value = "productId", required = false) productId: String, @RequestParam(value = "quantity", required = false) quantity: Integer, user: Principal): ApiResultEntity = {
     val eusr = user.asInstanceOf[AuthenticatedExternalWebService]
@@ -184,7 +181,7 @@ class ProductController {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  //@PreAuthorize("hasRole('ROLE_DOMAIN_USER')")
+  @PreAuthorize("hasRole('ROLE_WEB_USER')")
   @RequestMapping(value = Array("/test"), produces = Array("application/json"), method = Array(RequestMethod.GET))
   def test() = {
     val p1 = Product (
