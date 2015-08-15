@@ -160,14 +160,17 @@ class ProductController {
     buildApiProductDetail(product)
   }
 
-  def shoppingCartManager ( cart: ApiCart ):ApiCart =  {
+
+  def shoppingCartManager (sid:String) ( cart: ApiCart ):ApiCart =  {
     val tot = cart.items.map( i => ( i.quantity * i.apiProduct.price ) ).sum
-    ApiCart(tot, cart.items)
+    val apiCart = ApiCart(tot, cart.items)
+    shopingCartService.store(sid, apiCart)
   }
 
   @PreAuthorize("hasRole('ROLE_WEB_USER')")
   @RequestMapping(value = Array("/cart"), method = Array(RequestMethod.POST), headers = Array("content-type=application/x-www-form-urlencoded"))
   def product(@RequestParam (value = "productId", required = false) productId: String, @RequestParam(value = "quantity", required = false) quantity: Integer, user: Principal): ApiResultEntity = {
+
     val eusr = user.asInstanceOf[AuthenticatedExternalWebService]
 
     val apiCart = shopingCartService.retrieve(eusr.getToken) match {
@@ -175,7 +178,7 @@ class ProductController {
       case None    => ApiCart(0, List( ApiCartItem(buildApiProduct(productRepository.findByProductId(productId)), quantity) ))
     }
 
-    shoppingCartManager(apiCart)
+    shoppingCartManager(eusr.getToken)(apiCart)
   }
 
 

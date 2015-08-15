@@ -21,8 +21,9 @@ class ShoppingCartService {
     restShopApiAuthTokenCache.evictExpiredElements
   }
 
-  def store(token: String, apiCart: ApiCart) {
+  def store(token: String, apiCart: ApiCart): ApiCart = {
     restShopApiAuthTokenCache.put(new Element(token, apiCart))
+    apiCart
   }
 
   def contains(token: String): Boolean = {
@@ -31,7 +32,7 @@ class ShoppingCartService {
 
   def retrieve(token: String): Option[ApiCart] = {
     if (contains(token))
-      Some(restShopApiAuthTokenCache.get(token).getObjectValue.asInstanceOf[ApiCart])
+      return Some(restShopApiAuthTokenCache.get(token).getObjectValue.asInstanceOf[ApiCart])
 
     None
   }
