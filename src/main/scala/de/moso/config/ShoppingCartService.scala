@@ -15,7 +15,7 @@ class ShoppingCartService {
   val logger = LoggerFactory.getLogger(classOf[TokenService])
   val restShopApiAuthTokenCache = CacheManager.getInstance.getCache("restShopApiShopCartCache")
 
-  @Scheduled(fixedRate =  30 * 60 * 1000)
+  @Scheduled(fixedRate =  3 * 60 * 1000)
   def evictExpiredTokens {
     logger.info("Evicting Shoping tokens")
     restShopApiAuthTokenCache.evictExpiredElements

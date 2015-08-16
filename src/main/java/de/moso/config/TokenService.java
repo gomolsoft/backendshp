@@ -7,14 +7,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
+@Component
 public class TokenService {
 
     private static final Logger logger = LoggerFactory.getLogger(TokenService.class);
     private static final Cache restShopApiAuthTokenCache = CacheManager.getInstance().getCache("restShopApiAuthTokenCache");
-    public static final int HALF_AN_HOUR_IN_MILLISECONDS = 30 * 60 * 1000;
+    public static final int HALF_AN_HOUR_IN_MILLISECONDS = 3 * 60 * 1000;
 
     @Scheduled(fixedRate = HALF_AN_HOUR_IN_MILLISECONDS)
     public void evictExpiredTokens() {
