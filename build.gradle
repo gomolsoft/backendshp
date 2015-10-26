@@ -44,6 +44,7 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-social-twitter")
     compile("org.springframework.boot:spring-boot-starter-ws")
 
+    compile('net.sourceforge.htmlcleaner:htmlcleaner:2.15')
 
     compile ('org.apache.commons:commons-lang3:3.3.1') {
         exclude group: 'commons-logging'
